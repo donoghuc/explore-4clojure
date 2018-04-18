@@ -4,6 +4,8 @@
 ;;; # Learn Clojure with 4Closure!
 ;;; 
 ;;; Solve 4clojure problems and have solutions/explanations organized in pretty HTML
+;;; 
+;;; __source code__ https://github.com/donoghuc/explore-4clojure
 ;; **
 
 ;; **
