@@ -1,36 +1,11 @@
 # explore-4clojure
 
-FIXME: description
+As I come across neat solutions to 4clojure problems I want to organize and document them for future reference
 
-## Installation
+## Gorilla REPL
+I am using gorilla repl for organizing! soooo cool
+http://gorilla-repl.org/
 
-Download from http://example.com/FIXME.
-
-## Usage
-
-FIXME: explanation
-
-    $ java -jar explore-4clojure-0.1.0-standalone.jar [args]
-
-## Options
-
-FIXME: listing of options this app accepts.
-
-## Examples
-
-...
-
-### Bugs
-
-...
-
-### Any Other Sections
-### That You Think
-### Might be Useful
-
-## License
-
-Copyright © 2018 FIXME
-
-Distributed under the Eclipse Public License either version 1.0 or (at
-your option) any later version.
+## Render
+you can view rendered worksheet at 
+http://viewer.gorilla-repl.org/view.html?source=github&user=donoghuc&repo=explore-4clojure&path=/src/explore_4clojure/core.clj
