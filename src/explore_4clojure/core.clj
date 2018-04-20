@@ -658,6 +658,69 @@ reduce (fn [i _] (inc i)) 0
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
 ;; <=
 
+;; **
+;;; #Re-implement Map \#118
+;;; 
+;;; Map is one of the core elements of a functional programming language. Given a function f and an input sequence s, return a lazy sequence of (f x) for each element x in s.
+;;; 
+;;; __Special Restrictions:__ map map-indexed mapcat for
+;; **
+
+;; @@
+;; first thought was simple recursion. blows stack with unit test 3
+(def casadilla-recur
+  (fn recur-map
+    ([f col] (recur-map f col []))
+    ([f col acc]
+     (if (empty? col)
+       acc
+       (recur f (rest col) (conj acc (f (first col))))))))
+
+;; casadilla using reductions
+(def casadilla
+  (fn [f col]
+  (drop 1
+        (reductions (fn ([a b] (f b))) nil col))))
+
+;;chouser
+(def chouser
+  (fn l [f [a & m]]
+  (lazy-seq
+    (cons (f a) (if m (l f m))))))
+
+;;cgrand/amalloy
+(def cgramalloy 
+  (fn m [f s]
+  (lazy-seq
+    (when-let [[h & t] (seq s)]
+      (cons (f h) (m f t))))))
+
+;;noisesmith
+(def noisesmith
+  (fn MAP [f s]
+  (if (empty? s)
+    nil
+    (lazy-seq
+     (cons (f (first s))
+           (MAP f (rest s)))))))
+
+;; easy tests
+(= [3 4 5 6 7] (casadilla-recur inc [2 3 4 5 6]))
+(= [3 4 5 6 7] (casadilla inc [2 3 4 5 6]))
+(= [3 4 5 6 7] (chouser inc [2 3 4 5 6]))
+(= [3 4 5 6 7] (cgramalloy inc [2 3 4 5 6]))
+(= [3 4 5 6 7] (noisesmith inc [2 3 4 5 6]))
+
+;;stack killer test w/recursion
+(= [1000000 1000001]
+   (->> (casadilla inc (range))
+        (drop (dec 1000000))
+        (take 2)))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
+;; <=
+
 ;; @@
 
 ;; @@
