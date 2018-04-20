@@ -599,6 +599,65 @@ reduce (fn [i _] (inc i)) 0
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
 ;; <=
 
+;; **
+;;; # Infix Calculator \#135
+;;; Your friend Joe is always whining about Lisps using the prefix notation for math. Show him how you could easily write a function that does math using the infix notation. Is your favorite language that flexible, Joe? Write a function that accepts a variable length mathematical expression consisting of numbers and the operations +, -, *, and /. Assume a simple calculator that does not do precedence and instead just calculates left to right.
+;;; 
+;;; __note__ the solutions between the different users are particularly interesting for comparison
+;; **
+
+;; @@
+;;casadilla
+(def casadilla 
+  (fn [& stack]
+    ((fn recur-calc
+       [col acc]
+       (if (= 2 (count col))
+         ((first col) acc (last col))
+         (recur (drop 1 (rest col)) ((first col) acc (nth col 1)))))
+     (rest stack) (first stack))))
+
+;;chouser
+(def chouser 
+  (fn f
+    ([a] a)
+    ([a b c & m]
+     (apply f (b a c) m))))
+
+;;cgrand
+(def cgrand
+  (fn [x & xs]
+    (reduce (fn [x [f y]] (f x y)) x
+      (partition 2 xs))))
+
+;;amalloy
+(def amalloy
+  (fn c [x f y & r]
+    ((if r
+       #(apply c % r) +)
+     (f x y))))
+
+;;noisesmith
+(def noisesmith 
+  (fn infixr
+    [& steps]
+    (loop [[a op b & remaining] steps]
+      (let [step (op a b)]
+        (if (empty? remaining)
+          step
+          (recur (cons step remaining)))))))
+
+;;test
+(= 72 (casadilla 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9))
+(= 72 (chouser 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9))
+(= 72 (cgrand 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9))
+(= 72 (amalloy 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9))
+(= 72 (noisesmith 20 / 2 + 2 + 4 + 8 - 6 - 10 * 9))
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
+;; <=
+
 ;; @@
 
 ;; @@
