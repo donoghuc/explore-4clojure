@@ -721,6 +721,67 @@ reduce (fn [i _] (inc i)) 0
 ;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
 ;; <=
 
+;; **
+;;; # Sum of Square Digits #120
+;;; Write a function which takes a collection of integers as an argument. Return the count of how many elements are smaller than the sum of their squared component digits. For example: 10 is larger than 1 squared plus 0 squared; whereas 15 is smaller than 1 squared plus 5 squared.
+;; **
+
+;; @@
+;;casadilla
+(def casadilla
+  (fn [col]
+  (letfn [(sq-sum [c] (reduce + (map #(* % %) c)))
+          (int->str [i] (#(map (comp read-string str) (str %)) i))]
+    (->> col
+         (map (fn [val] (if (< val (sq-sum (int->str val))) 1 0)) )
+         (reduce +)))))
+
+;;chouser
+reduce
+#(+ %
+    (if (< %2 (apply + (for [c (str %2)]
+                         (Math/pow (- (int c) 48) 2))))
+      1
+      0))
+0
+
+;;cgrand
+reduce
+#(if (< %2 (reduce + 
+  (map (zipmap "0123456789" (map * (range) (range)))
+    (str %2)))) (inc %) %) 0
+
+;; amalloy
+(def amalloy 
+  (fn [coll]
+  (count
+   (for [x coll
+         :let [digits (map (comp read-string str) (str x))]
+         :when (< x (reduce + (map #(* % %) digits)))]
+     x))))
+
+;;noisesmith
+(def noisesmith 
+  #(letfn [(get-digits [n]
+           (loop [digits () pool n]
+             (if (zero? pool)
+               digits
+               (recur (cons (rem pool 10) digits) (quot pool 10)))))
+         (square [x] (* x x)) 
+         (<ssd? [n]
+           (< n (apply + (map square (get-digits n)))))]
+   (count (filter <ssd? %))))
+
+;;test
+(= 8 (casadilla (range 10)))
+(= 8 (amalloy (range 10)))
+(= 8 (noisesmith (range 10)))
+
+;; @@
+;; =>
+;;; {"type":"html","content":"<span class='clj-unkown'>true</span>","value":"true"}
+;; <=
+
 ;; @@
 
 ;; @@
